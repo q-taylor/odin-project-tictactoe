@@ -15,31 +15,34 @@ const Gameboard = (() => {
   // gets the entire board array
   const getBoard = () => board;
 
-  // place marker - pass in current player
-  function PlaceMarker (currentPlayer) {
-    const activeCell = getActiveCell(1,1);
-    console.log(currentPlayer.getMarker());
-    
+  // a cell is one square on the board
+  // can be an empty string, an 'x', or an 'o'
+
+ /*  function Cell() {
+    let value = "";
+
+    // retrieve current value of cell through closure
+    const getValue = () => value;
+
+    return {
+      getValue
+    };
+  } */
+
+  // put current player marker in the active cell
+  const placeMarker = (ActiveCell, currentPlayer) => {
+    board[ActiveCell[0]][ActiveCell[1]] = currentPlayer.getMarker();
   }
 
   // get active cell
   function ActiveCell (row, column) {
-    const activeCell = board[row][column];
-    // check if cell is NOT empty return invalid selection if not not empty
-    return activeCell !== "" ? (activeCell) : console.log("invalid selection");
+    const coordinates = [row, column];
+    // check if cell is NOT empty return activeCell array of selection coordinates
+    return board[row][column] !== "" ? coordinates : console.log("invalid selection");
 
   }
 
-
-  /* // cell method to determine value of individual cells on board
-  function Cell() {
-    // starting value empty string
-    let value = '';
-    // get player marker
-
-  } */
-
-  return {getBoard, ActiveCell, PlaceMarker};
+  return {getBoard, ActiveCell, placeMarker};
 })();
 
 // player factory
@@ -49,8 +52,10 @@ const Player = (name, marker) => {
   return {getName, getMarker};
 };
 
-// game controller - flow and state of game, determine winner
+john = Player("john", "x");
+will = Player("will", "o");
 
+// game controller - flow and state of game, determine winner
 function GameController (player) {
 
 }
