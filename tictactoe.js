@@ -8,7 +8,7 @@ const Gameboard = (() => {
   for (let i = 0; i < rows; i++) {
     board[i] = [];
     for (let j = 0; j < columns; j++) {
-      board[i].push("fuckaa");
+      board[i].push("fuckkaa");
     }
   }
 
@@ -36,24 +36,29 @@ const Gameboard = (() => {
     });
   }
 
-  // put current player marker in the active cell
+  // put current player marker in the active cell in both array and dom
   // passes in an array with the cell coordinates
-  const placeMarker = (ActiveCell, currentPlayer) => {
-    board[ActiveCell[0]][ActiveCell[1]] = currentPlayer.getMarker();
+  const placeMarker = (currentPlayer) => {
+    const coordinates = ActiveCell()
+    board[coordinates[0]][coordinates[1]] = currentPlayer.getMarker();
     const currentRow = document.querySelector(`[row-num="${ActiveCell[0]}"]`);
     const currentCell = currentRow.querySelector(`[cell-num="${ActiveCell[1]}"]`);
     currentCell.textContent = currentPlayer.getMarker();
   }
 
   // get active cell
-  function ActiveCell (row, column) {
-    const coordinates = [row, column];
+  function ActiveCell (coordinates) {
+    /* const row = document.querySelector(`[row-num]`)
+    const coordinates = [row, column]; */
+    console.log(board[row][column]);
     // check if cell is NOT empty return array of selection coordinates
-    return board[row][column] !== "" ? coordinates : console.log("invalid selection");
+    if (board[row][column] === "") {
+      return coordinates;
+    } else console.log("space occupado");
 
   }
 
-  return {getBoard, ActiveCell, placeMarker, printBoard};
+  return {getBoard, placeMarker, printBoard};
 })();
 
 // player factory
