@@ -8,12 +8,36 @@ const Gameboard = (() => {
   for (let i = 0; i < rows; i++) {
     board[i] = [];
     for (let j = 0; j < columns; j++) {
-      board[i].push("");
+      board[i].push("p");
     }
   }
 
   // gets the entire board array
   const getBoard = () => board;
+
+  // print board to website
+  const printBoard = () => {
+    const body = document.getElementById("body");
+    
+    
+
+    board.forEach((element, index) => {
+      const row = document.createElement("div");
+      row.classList.add("row");
+      row.setAttribute("row-num", index)
+      body.appendChild(row);
+      const rowIndex = index;
+      board[index].forEach((element, index2) => {
+        const cell = document.createElement("div");
+        cell.classList.add("cell");
+        cell.setAttribute("cell-num", index2);
+        const currentRow = document.querySelector(`[row-num="${rowIndex}"]`);
+        currentRow.appendChild(cell);
+      });
+
+    });
+
+  }
 
   // a cell is one square on the board
   // can be an empty string, an 'x', or an 'o'
@@ -37,12 +61,12 @@ const Gameboard = (() => {
   // get active cell
   function ActiveCell (row, column) {
     const coordinates = [row, column];
-    // check if cell is NOT empty return activeCell array of selection coordinates
+    // check if cell is NOT empty return array of selection coordinates
     return board[row][column] !== "" ? coordinates : console.log("invalid selection");
 
   }
 
-  return {getBoard, ActiveCell, placeMarker};
+  return {getBoard, ActiveCell, placeMarker, printBoard};
 })();
 
 // player factory
