@@ -8,7 +8,7 @@ const Gameboard = (() => {
   for (let i = 0; i < rows; i++) {
     board[i] = [];
     for (let j = 0; j < columns; j++) {
-      board[i].push("p");
+      board[i].push("fuckaa");
     }
   }
 
@@ -18,8 +18,6 @@ const Gameboard = (() => {
   // print board to website
   const printBoard = () => {
     const body = document.getElementById("body");
-    
-    
 
     board.forEach((element, index) => {
       const row = document.createElement("div");
@@ -33,29 +31,18 @@ const Gameboard = (() => {
         cell.setAttribute("cell-num", index2);
         const currentRow = document.querySelector(`[row-num="${rowIndex}"]`);
         currentRow.appendChild(cell);
+        cell.textContent = element;
       });
-
     });
-
   }
 
-  // a cell is one square on the board
-  // can be an empty string, an 'x', or an 'o'
-
- /*  function Cell() {
-    let value = "";
-
-    // retrieve current value of cell through closure
-    const getValue = () => value;
-
-    return {
-      getValue
-    };
-  } */
-
   // put current player marker in the active cell
+  // passes in an array with the cell coordinates
   const placeMarker = (ActiveCell, currentPlayer) => {
     board[ActiveCell[0]][ActiveCell[1]] = currentPlayer.getMarker();
+    const currentRow = document.querySelector(`[row-num="${ActiveCell[0]}"]`);
+    const currentCell = currentRow.querySelector(`[cell-num="${ActiveCell[1]}"]`);
+    currentCell.textContent = currentPlayer.getMarker();
   }
 
   // get active cell
