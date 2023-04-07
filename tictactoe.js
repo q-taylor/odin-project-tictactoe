@@ -8,7 +8,7 @@ const Gameboard = (() => {
   for (let i = 0; i < rows; i++) {
     board[i] = [];
     for (let j = 0; j < columns; j++) {
-      board[i].push("fuckkaa");
+      board[i].push('');
     }
   }
 
@@ -17,61 +17,79 @@ const Gameboard = (() => {
 
   // print board to website
   const printBoard = () => {
-    const body = document.getElementById("body");
-
+    const boardDiv = document.getElementById('board');
     board.forEach((element, index) => {
-      const row = document.createElement("div");
-      row.classList.add("row");
-      row.setAttribute("row-num", index)
-      body.appendChild(row);
+      const row = document.createElement('div');
+      row.classList.add('row');
+      row.dataset.rowNum = index;
+      boardDiv.appendChild(row);
       const rowIndex = index;
       board[index].forEach((element, index2) => {
-        const cell = document.createElement("div");
-        cell.classList.add("cell");
-        cell.setAttribute("cell-num", index2);
-        const currentRow = document.querySelector(`[row-num="${rowIndex}"]`);
+        const cell = document.createElement('button');
+        cell.classList.add('cell');
+        cell.dataset.xIndex = index2;
+        cell.dataset.yIndex = rowIndex;
+        const currentRow = document.querySelector(`[data-row-num="${rowIndex}"]`);
         currentRow.appendChild(cell);
         cell.textContent = element;
       });
     });
-  }
+  };
 
   // put current player marker in the active cell in both array and dom
-  // passes in an array with the cell coordinates
-  const placeMarker = (currentPlayer) => {
-    const coordinates = ActiveCell()
-    board[coordinates[0]][coordinates[1]] = currentPlayer.getMarker();
-    const currentRow = document.querySelector(`[row-num="${ActiveCell[0]}"]`);
-    const currentCell = currentRow.querySelector(`[cell-num="${ActiveCell[1]}"]`);
-    currentCell.textContent = currentPlayer.getMarker();
-  }
+  // passes in an object with the cell coordinates
+  const placeMarker = (activeCell, currentPlayerMarker) => {
+    board[activeCell.x][activeCell.y] = currentPlayerMarker;
+    const currentCell = document.activeElement;
+    console.log(currentCell.dataset.xIndex, currentPlayerMarker);
+    currentCell.classList.toggle(`${currentPlayerMarker}`);
+  };
 
-  // get active cell
-  function ActiveCell (coordinates) {
-    /* const row = document.querySelector(`[row-num]`)
-    const coordinates = [row, column]; */
-    console.log(board[row][column]);
-    // check if cell is NOT empty return array of selection coordinates
-    if (board[row][column] === "") {
-      return coordinates;
-    } else console.log("space occupado");
-
-  }
-
-  return {getBoard, placeMarker, printBoard};
+  return { getBoard, placeMarker, printBoard };
 })();
 
 // player factory
-const Player = (name, marker) => {
-  const getMarker = () => marker;
-  const getName = () => name;
-  return {getName, getMarker};
-};
+const Player = (name, marker) => ({ name, marker });
 
-john = Player("john", "x");
-will = Player("will", "o");
+// create demo players for debugging
+const john = Player('john', 'x');
+const will = Player('will', 'o');
 
 // game controller - flow and state of game, determine winner
-function GameController (player) {
-
+function GameController(
+  playerOne = john,
+  playerTwo = will,
+) {
+  const board = Gameboard;
+  let currentPlayer = playerOne;
+  board.printBoard();
+  const SwitchPlayerTurn = () => {
+    currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
+  };
+  const playRound = (activeCell) => {
+    const currentPlayerMarker = currentPlayer.marker;
+    board.placeMarker(activeCell, currentPlayerMarker);
+    SwitchPlayerTurn();
+  };
+  return { playRound };
 }
+
+function ScreenController() {
+  const game = GameController();
+  const boardDiv = document.querySelector('#board');
+  // button event listener
+  function clickHandler(e) {
+    // test if click is not on a cell to avoid errors
+    if (!e.target.dataset.xIndex) {
+      return;
+    }
+    const activeCell = {
+      x: document.activeElement.dataset.xIndex,
+      y: document.activeElement.dataset.yIndex,
+    };
+    game.playRound(activeCell);
+  }
+  boardDiv.addEventListener('click', clickHandler);
+}
+
+ScreenController();
