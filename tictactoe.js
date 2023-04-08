@@ -40,9 +40,11 @@ const Gameboard = (() => {
   // passes in an object with the cell coordinates and the marker value
   // marker printing handled by changing the css class
   const placeMarker = (activeCell, currentPlayerMarker) => {
-    board[activeCell.y][activeCell.x] = currentPlayerMarker;
-    const currentCell = document.activeElement;
-    currentCell.classList.toggle(`${currentPlayerMarker}`);
+    if (board[activeCell.y][activeCell.x] === '') {
+      board[activeCell.y][activeCell.x] = currentPlayerMarker;
+      const currentCell = document.activeElement;
+      currentCell.classList.toggle(`${currentPlayerMarker}`);
+    }
   };
 
   return { getBoard, placeMarker, printBoard };
@@ -66,12 +68,6 @@ function GameController(
   const SwitchPlayerTurn = () => {
     currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
   };
-  const playRound = (activeCell) => {
-    board.placeMarker(activeCell, currentPlayer.marker);
-    SwitchPlayerTurn();
-    checkGameOver(activeCell);
-    console.log(board.getBoard());
-  };
   // check if three in a row or board is full
   const checkGameOver = (activeCell) => {
     const mark = board.getBoard()[activeCell.y][activeCell.x];
@@ -82,13 +78,24 @@ function GameController(
       .map((row) => row[activeCell.x])
       .every((element) => element === mark)) {
       console.log('winner in Y');
-    } else if ((board.getBoard()[0][0] === board.getBoard()[1][1]
+    } else if (board.getBoard()[1][1] !== '' && ((board.getBoard()[0][0] === board.getBoard()[1][1]
       && board.getBoard()[1][1] === board.getBoard()[2][2])
       || (board.getBoard()[1][1] === board.getBoard()[0][2]
-      && board.getBoard()[1][1] === board.getBoard()[2][0])) {
+      && board.getBoard()[1][1] === board.getBoard()[2][0]))
+    ) {
       console.log('winner in diagonal');
     } else if (board.getBoard().every((row) => row.every((element) => element !== ''))) {
       console.log('game over');
+    }
+  };
+  const playRound = (activeCell) => {
+    if (board.getBoard()[activeCell.y][activeCell.x] === '') {
+      board.placeMarker(activeCell, currentPlayer.marker);
+      SwitchPlayerTurn();
+      checkGameOver(activeCell);
+      console.log(board.getBoard());
+    } else {
+      console.log('space already taken, choose again');
     }
   };
   return { playRound };
@@ -100,9 +107,7 @@ function ScreenController() {
   // button event listener
   function clickHandler(e) {
     // test if click is not on a cell to avoid errors
-    if (!e.target.dataset.xIndex) {
-      return;
-    }
+    if (!e.target.dataset.xIndex) return;
     const activeCell = {
       x: document.activeElement.dataset.xIndex,
       y: document.activeElement.dataset.yIndex,
