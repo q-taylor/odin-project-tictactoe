@@ -140,6 +140,8 @@ function ScreenController() {
   const resetBtn = () => {
     game.resetGame();
     document.querySelector('#board').removeEventListener('click', clickHandler);
+    document.getElementById('player-one-mark').disabled = false;
+    document.getElementById('player-two-mark').disabled = false;
     const cells = document.querySelectorAll('.cell');
     cells.forEach((element) => element.classList.remove('x', 'o'));
   };
