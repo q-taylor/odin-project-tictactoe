@@ -88,15 +88,15 @@ function GameController() {
       playerTwo.marker = 'x';
       playerOne.marker = 'o';
     }
-    console.log(`${playerOne.name} mark: ${playerOne.marker}  ${playerTwo.name} mark: ${playerTwo.marker}`);
+    /* console.log(`${playerOne.name} mark: ${playerOne.marker}
+    ${playerTwo.name} mark: ${playerTwo.marker}`); */
   };
   // check if three in a row or board is full
   const checkGameOver = (activeCell) => {
     const mark = board.getBoard()[activeCell.y][activeCell.x];
-    if ((board.getBoard()[activeCell.y].every((element) => element === mark))
-    || (board.getBoard()
-      .map((row) => row[activeCell.x])
-      .every((element) => element === mark))
+    if (
+      (board.getBoard()[activeCell.y].every((element) => element === mark))
+    || (board.getBoard().map((row) => row[activeCell.x]).every((element) => element === mark))
     || (board.getBoard()[1][1] !== '' && ((board.getBoard()[0][0] === board.getBoard()[1][1]
       && board.getBoard()[1][1] === board.getBoard()[2][2])
       || (board.getBoard()[1][1] === board.getBoard()[0][2]

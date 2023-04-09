@@ -24,6 +24,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 1rem;
 }
 
 #game-info {
@@ -63,13 +64,17 @@ body {
   border: 3px solid black;
 }
 
+.cell:hover {
+  box-shadow: 5px 5px 5px gray;
+}
+
 .x {
-  background-image: url(/x.svg);
+  background-image: url(./x.svg);
   background-size: contain;
 }
 
 .o {
-  background-image: url(/o.svg);
+  background-image: url(./o.svg);
   background-size: contain;
 }
 
@@ -90,12 +95,12 @@ input {
 }
 
 input[type=radio] {
-  background-image: url(/o.svg);
+  background-image: url(./o.svg);
   background-size: contain;
 }
 
 input[type=radio]:checked {
-  background-image: url(/x.svg);
+  background-image: url(./x.svg);
 }
 
 input[type=radio]:hover {
