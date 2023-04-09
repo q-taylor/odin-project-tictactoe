@@ -10,13 +10,18 @@ ul {
 
 :root {
   --gap: 1.5rem;
-  --board-size: 900px;
+  --board-size: 80vw;
 }
 
 body {
-  width: 100vw;
-  height: 100vh;
   display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -26,9 +31,9 @@ body {
   justify-content: space-evenly;
 }
 
-.names {
-  display: flex;
-  flex-direction: column;
+.player-info {
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 1rem;
 }
 
@@ -43,8 +48,8 @@ body {
 }
 
 .row {
-  height: 100px;
   display: flex;
+  align-items: center;
   gap: var(--gap);
 }
 
@@ -53,7 +58,8 @@ body {
   justify-content: center;
   align-items: center;
   gap: var(--gap);
-  width: 100px;
+  width: calc(var(--board-size)/4);
+  height: calc(var(--board-size)/4);
   border: 3px solid black;
 }
 
@@ -69,4 +75,39 @@ body {
 
 input {
   border: 0;
+  appearance: none;
+}
+
+.name-label {
+  width: 5rem;
+}
+
+.player-info>ul>li {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 2rem;
+}
+
+input[type=radio] {
+  background-image: url(/o.svg);
+  background-size: contain;
+}
+
+input[type=radio]:checked {
+  background-image: url(/x.svg);
+}
+
+input[type=radio]:hover {
+  box-shadow: 3px 3px 5px black;
+}
+
+#player-one-mark, #player-two-mark {
+  width: 2rem;
+  height: 2rem;
+}
+
+#start-game-btn {
+  width: calc(var(--board-size)/3);
+  height: calc(var(--board-size)/9);
 }

@@ -18,22 +18,27 @@ const Gameboard = (() => {
   // print board to website
   const printBoard = () => {
     const boardDiv = document.getElementById('board');
-    board.forEach((element, index) => {
+    board.forEach((rowArr, index) => {
       const row = document.createElement('div');
       row.classList.add('row');
       row.dataset.rowNum = index;
       boardDiv.appendChild(row);
       const rowIndex = index;
-      element.forEach((cellElement, index2) => {
+      rowArr.forEach((element, index2) => {
         const cell = document.createElement('button');
         cell.classList.add('cell');
         cell.dataset.xIndex = index2;
         cell.dataset.yIndex = rowIndex;
         const currentRow = document.querySelector(`[data-row-num="${rowIndex}"]`);
         currentRow.appendChild(cell);
-        cell.textContent = cellElement;
+        cell.textContent = element;
       });
     });
+  };
+
+  // clear board
+  const clearBoard = () => {
+
   };
 
   // put current player marker in the active cell in both array and dom
@@ -53,13 +58,12 @@ const Gameboard = (() => {
 // player factory
 const Player = (name, marker) => ({ name, marker });
 
-// create demo players for debugging
-const playerOne = Player('john', 'x');
-const playerTwo = Player('will', 'o');
-
 // game controller - flow and state of game, determine winner
 function GameController() {
   const board = Gameboard;
+  // create default players
+  const playerOne = Player('player one', 'x');
+  const playerTwo = Player('player two', 'o');
   let currentPlayer = playerOne;
   board.printBoard();
   const SwitchPlayerTurn = () => {
@@ -72,6 +76,17 @@ function GameController() {
     } else if (e.target.id === 'player-two') {
       playerTwo.name = e.target.value;
     }
+  };
+  // change player marker
+  const changePlayerMarker = (e) => {
+    if (e.target.id === 'player-one-mark') {
+      playerOne.marker = 'x';
+      playerTwo.marker = 'o';
+    } else {
+      playerTwo.marker = 'x';
+      playerOne.marker = 'o';
+    }
+    console.log(`${playerOne.name} mark: ${playerOne.marker}  ${playerTwo.name} mark: ${playerTwo.marker}`);
   };
   // check if three in a row or board is full
   const checkGameOver = (activeCell) => {
@@ -100,7 +115,16 @@ function GameController() {
       console.log('space already taken, choose again');
     }
   };
-  return { playRound, changePlayerName };
+  const resetGame = () => {
+    console.log(document.querySelectorAll('.cell'));
+    board.getBoard().forEach((element) => { element.fill(''); });
+    console.log(document.querySelectorAll('.cell'));
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach((element) => element.classList.remove('x', 'o'));
+  };
+  return {
+    playRound, changePlayerName, changePlayerMarker, resetGame,
+  };
 }
 
 function ScreenController() {
@@ -116,9 +140,20 @@ function ScreenController() {
     };
     game.playRound(activeCell);
   }
-  boardDiv.addEventListener('click', clickHandler);
+
+  const startGame = () => {
+    document.getElementById('player-one-mark').disabled = true;
+    document.getElementById('player-two-mark').disabled = true;
+    boardDiv.addEventListener('click', clickHandler);
+    document.getElementById('reset-btn').addEventListener('click', game.resetGame);
+  };
+  // startGameBtn listener
+  document.getElementById('start-game-btn').addEventListener('click', startGame);
   // name event listeners
-  document.getElementById('player-one').addEventListener('input', game.changePlayerName);
-  document.getElementById('player-two').addEventListener('input', game.changePlayerName);
+  document.getElementById('player-one-name').addEventListener('input', game.changePlayerName);
+  document.getElementById('player-two-name').addEventListener('input', game.changePlayerName);
+  // player mark event listeners
+  document.querySelector('#player-one-mark').addEventListener('click', game.changePlayerMarker);
+  document.querySelector('#player-two-mark').addEventListener('click', game.changePlayerMarker);
 }
 ScreenController();

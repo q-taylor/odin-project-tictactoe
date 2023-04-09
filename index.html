@@ -9,25 +9,27 @@
   <title>Tic Tac Toe</title>
 </head>
 <body id="body">
-  <div id="board">
+  <div class="container">
     <h1 class="heading">Tic Tac Toe</h1>
     <div id="game-info">
-      <div class="names">
+      <div class="player-info">
         <ul>
-          <li>
-            <label for="player-one">Player One</label>
-            <input type="text" id="player-one" name="player one name" placeholder="player one name">
+          <li class="player-one">
+            <label class="name-label" for="player-one">Player One:</label>
+            <input type="text" id="player-one-name" name="player-one" placeholder="player one name">
+            <input type="radio" class="player-marker" name="marker" id="player-one-mark" checked>
           </li>
           <li>
-            <label for="player-two">Player Two</label>
-            <input type="text" id="player-two" name="player two name" placeholder="player two name">
+            <label class="name-label" for="player-two">Player Two:</label>
+            <input type="text" id="player-two-name" name="player-two" placeholder="player two name">
+            <input type="radio" class="player-marker" name="marker" id="player-two-mark">
           </li>
         </ul>
-      </div>
-      <div>
-
-      </div>
+      </div>  
     </div>
+    <div id="board"></div>
+    <button type="button" id="start-game-btn">Start Game</button>
+    <button type="button" id="reset-btn">Reset</button>
   </div>
 </body>
 </html>
