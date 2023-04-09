@@ -70,12 +70,12 @@ body {
 }
 
 .x {
-  background-image: url(../x.svg);
+  background-image: url(../x-mark.svg);
   background-size: contain;
 }
 
 .o {
-  background-image: url(../o.svg);
+  background-image: url(../o-mark.svg);
   background-size: contain;
 }
 
@@ -96,12 +96,12 @@ input {
 }
 
 input[type=radio] {
-  background-image: url(../o.svg);
+  background-image: url(../o-mark.svg);
   background-size: contain;
 }
 
 input[type=radio]:checked {
-  background-image: url(../x.svg);
+  background-image: url(../x-mark.svg);
 }
 
 input[type=radio]:hover {
