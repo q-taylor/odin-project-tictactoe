@@ -39,8 +39,6 @@ const Gameboard = (() => {
   // clear board
   const clearBoard = () => {
     getBoard().forEach((element) => { element.fill(''); });
-    const cells = document.querySelectorAll('.cell');
-    cells.forEach((element) => element.classList.remove('x', 'o'));
   };
 
   // put current player marker in the active cell in both array and dom
@@ -120,7 +118,6 @@ function GameController() {
   };
   const resetGame = () => {
     board.clearBoard();
-    document.querySelector('#board').removeEventListener('click', clickHandler);
   };
   return {
     playRound, changePlayerName, changePlayerMarker, resetGame,
@@ -140,12 +137,17 @@ function ScreenController() {
     };
     game.playRound(activeCell);
   }
-
+  const resetBtn = () => {
+    game.resetGame();
+    document.querySelector('#board').removeEventListener('click', clickHandler);
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach((element) => element.classList.remove('x', 'o'));
+  };
   const startGame = () => {
     document.getElementById('player-one-mark').disabled = true;
     document.getElementById('player-two-mark').disabled = true;
     boardDiv.addEventListener('click', clickHandler);
-    document.getElementById('reset-btn').addEventListener('click', game.resetGame);
+    document.getElementById('reset-btn').addEventListener('click', resetBtn);
   };
   // startGameBtn listener
   document.getElementById('start-game-btn').addEventListener('click', startGame);
