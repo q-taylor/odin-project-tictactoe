@@ -38,7 +38,9 @@ const Gameboard = (() => {
 
   // clear board
   const clearBoard = () => {
-
+    getBoard().forEach((element) => { element.fill(''); });
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach((element) => element.classList.remove('x', 'o'));
   };
 
   // put current player marker in the active cell in both array and dom
@@ -52,7 +54,9 @@ const Gameboard = (() => {
     }
   };
 
-  return { getBoard, placeMarker, printBoard };
+  return {
+    getBoard, placeMarker, printBoard, clearBoard,
+  };
 })();
 
 // player factory
@@ -108,7 +112,6 @@ function GameController() {
   const playRound = (activeCell) => {
     if (board.getBoard()[activeCell.y][activeCell.x] === '') {
       board.placeMarker(activeCell, currentPlayer.marker);
-      console.log(board.getBoard(), currentPlayer.name);
       SwitchPlayerTurn();
       checkGameOver(activeCell);
     } else {
@@ -116,11 +119,8 @@ function GameController() {
     }
   };
   const resetGame = () => {
-    console.log(document.querySelectorAll('.cell'));
-    board.getBoard().forEach((element) => { element.fill(''); });
-    console.log(document.querySelectorAll('.cell'));
-    const cells = document.querySelectorAll('.cell');
-    cells.forEach((element) => element.classList.remove('x', 'o'));
+    board.clearBoard();
+    document.querySelector('#board').removeEventListener('click', clickHandler);
   };
   return {
     playRound, changePlayerName, changePlayerMarker, resetGame,
