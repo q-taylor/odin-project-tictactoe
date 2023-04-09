@@ -24,14 +24,14 @@ const Gameboard = (() => {
       row.dataset.rowNum = index;
       boardDiv.appendChild(row);
       const rowIndex = index;
-      board[index].forEach((element, index2) => {
+      element.forEach((cellElement, index2) => {
         const cell = document.createElement('button');
         cell.classList.add('cell');
         cell.dataset.xIndex = index2;
         cell.dataset.yIndex = rowIndex;
         const currentRow = document.querySelector(`[data-row-num="${rowIndex}"]`);
         currentRow.appendChild(cell);
-        cell.textContent = element;
+        cell.textContent = cellElement;
       });
     });
   };
@@ -54,51 +54,53 @@ const Gameboard = (() => {
 const Player = (name, marker) => ({ name, marker });
 
 // create demo players for debugging
-const john = Player('john', 'x');
-const will = Player('will', 'o');
+const playerOne = Player('john', 'x');
+const playerTwo = Player('will', 'o');
 
 // game controller - flow and state of game, determine winner
-function GameController(
-  playerOne = john,
-  playerTwo = will,
-) {
+function GameController() {
   const board = Gameboard;
   let currentPlayer = playerOne;
   board.printBoard();
   const SwitchPlayerTurn = () => {
     currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
   };
+  // change player name whenever a new one is typed
+  const changePlayerName = (e) => {
+    if (e.target.id === 'player-one') {
+      playerOne.name = e.target.value;
+    } else if (e.target.id === 'player-two') {
+      playerTwo.name = e.target.value;
+    }
+  };
   // check if three in a row or board is full
   const checkGameOver = (activeCell) => {
     const mark = board.getBoard()[activeCell.y][activeCell.x];
-    console.log(`active cell marker: ${mark}`);
-    if (board.getBoard()[activeCell.y].every((element) => element === mark)) {
-      console.log('Winner in x');
-    } else if (board.getBoard()
+    if ((board.getBoard()[activeCell.y].every((element) => element === mark))
+    || (board.getBoard()
       .map((row) => row[activeCell.x])
-      .every((element) => element === mark)) {
-      console.log('winner in Y');
-    } else if (board.getBoard()[1][1] !== '' && ((board.getBoard()[0][0] === board.getBoard()[1][1]
+      .every((element) => element === mark))
+    || (board.getBoard()[1][1] !== '' && ((board.getBoard()[0][0] === board.getBoard()[1][1]
       && board.getBoard()[1][1] === board.getBoard()[2][2])
       || (board.getBoard()[1][1] === board.getBoard()[0][2]
       && board.getBoard()[1][1] === board.getBoard()[2][0]))
-    ) {
-      console.log('winner in diagonal');
+    )) {
+      console.log('winner winner chicken dinner');
     } else if (board.getBoard().every((row) => row.every((element) => element !== ''))) {
-      console.log('game over');
+      console.log('Tie - game over');
     }
   };
   const playRound = (activeCell) => {
     if (board.getBoard()[activeCell.y][activeCell.x] === '') {
       board.placeMarker(activeCell, currentPlayer.marker);
+      console.log(board.getBoard(), currentPlayer.name);
       SwitchPlayerTurn();
       checkGameOver(activeCell);
-      console.log(board.getBoard());
     } else {
       console.log('space already taken, choose again');
     }
   };
-  return { playRound };
+  return { playRound, changePlayerName };
 }
 
 function ScreenController() {
@@ -115,6 +117,8 @@ function ScreenController() {
     game.playRound(activeCell);
   }
   boardDiv.addEventListener('click', clickHandler);
+  // name event listeners
+  document.getElementById('player-one').addEventListener('input', game.changePlayerName);
+  document.getElementById('player-two').addEventListener('input', game.changePlayerName);
 }
-
 ScreenController();
