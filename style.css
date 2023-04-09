@@ -70,12 +70,12 @@ body {
 }
 
 .x {
-  background-image: url("../odin-project-tictactoe/x-mark.svg?sanitize=true");
+  background-image: url("./x-mark.svg?sanitize=true");
   background-size: contain;
 }
 
 .o {
-  background-image: url("../odin-project-tictactoe/o-mark.svg?sanitize=true");
+  background-image: url("./o-mark.svg?sanitize=true");
   background-size: contain;
 }
 
@@ -96,12 +96,12 @@ input {
 }
 
 input[type=radio] {
-  background-image: url("../odin-project-tictactoe/o-mark.svg?sanitize=true");
+  background-image: url("./o-mark.svg?sanitize=true");
   background-size: contain;
 }
 
 input[type=radio]:checked {
-  background-image: url("../odin-project-tictactoe/x-mark.svg?sanitize=true");
+  background-image: url("./x-mark.svg?sanitize=true");
 }
 
 input[type=radio]:hover {
