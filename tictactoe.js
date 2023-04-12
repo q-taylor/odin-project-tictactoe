@@ -15,26 +15,7 @@ const Gameboard = (() => {
   // gets the entire board array
   const getBoard = () => board;
 
-  // print board to website
-  const printBoard = () => {
-    const boardDiv = document.getElementById('board');
-    board.forEach((rowArr, index) => {
-      const row = document.createElement('div');
-      row.classList.add('row');
-      row.dataset.rowNum = index;
-      boardDiv.appendChild(row);
-      const rowIndex = index;
-      rowArr.forEach((element, index2) => {
-        const cell = document.createElement('button');
-        cell.classList.add('cell');
-        cell.dataset.xIndex = index2;
-        cell.dataset.yIndex = rowIndex;
-        const currentRow = document.querySelector(`[data-row-num="${rowIndex}"]`);
-        currentRow.appendChild(cell);
-        cell.textContent = element;
-      });
-    });
-  };
+  
 
   // clear board
   const clearBoard = () => {
@@ -53,7 +34,7 @@ const Gameboard = (() => {
   };
 
   return {
-    getBoard, placeMarker, printBoard, clearBoard,
+    getBoard, placeMarker, clearBoard,
   };
 })();
 
@@ -67,7 +48,6 @@ function GameController() {
   const playerOne = Player('player one', 'x');
   const playerTwo = Player('player two', 'o');
   let currentPlayer = playerOne;
-  board.printBoard();
   const SwitchPlayerTurn = () => {
     currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
   };
@@ -91,6 +71,9 @@ function GameController() {
     /* console.log(`${playerOne.name} mark: ${playerOne.marker}
     ${playerTwo.name} mark: ${playerTwo.marker}`); */
   };
+  function resetGame() {
+    board.clearBoard();
+  };
   // check if three in a row or board is full
   const checkGameOver = (activeCell) => {
     const mark = board.getBoard()[activeCell.y][activeCell.x];
@@ -102,6 +85,7 @@ function GameController() {
       || (board.getBoard()[1][1] === board.getBoard()[0][2]
       && board.getBoard()[1][1] === board.getBoard()[2][0]))
     )) {
+      resetGame();
       console.log('winner winner chicken dinner');
     } else if (board.getBoard().every((row) => row.every((element) => element !== ''))) {
       console.log('Tie - game over');
@@ -116,11 +100,9 @@ function GameController() {
       console.log('space already taken, choose again');
     }
   };
-  const resetGame = () => {
-    board.clearBoard();
-  };
+  
   return {
-    playRound, changePlayerName, changePlayerMarker, resetGame,
+    playRound, changePlayerName, changePlayerMarker, resetGame, board
   };
 }
 
@@ -136,16 +118,45 @@ function ScreenController() {
       y: document.activeElement.dataset.yIndex,
     };
     game.playRound(activeCell);
+  };
+  // print board to website
+  const printBoard = () => {
+    game.board.getBoard().forEach((rowArr, index) => {
+      const row = document.createElement('div');
+      row.classList.add('row');
+      row.dataset.rowNum = index;
+      boardDiv.appendChild(row);
+      const rowIndex = index;
+      rowArr.forEach((element, index2) => {
+        const cell = document.createElement('button');
+        cell.classList.add('cell');
+        cell.dataset.xIndex = index2;
+        cell.dataset.yIndex = rowIndex;
+        const currentRow = document.querySelector(`[data-row-num="${rowIndex}"]`);
+        currentRow.appendChild(cell);
+        cell.textContent = element;
+      });
+    });
+  };
+  const clearCells = () => {
+    console.log("display cleared");
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach((element) => element.classList.remove('x', 'o'));
+  };
+  const clearDisplay = () => {
+    boardDiv.textContent = '';
   }
   const resetBtn = () => {
     game.resetGame();
     document.querySelector('#board').removeEventListener('click', clickHandler);
     document.getElementById('player-one-mark').disabled = false;
     document.getElementById('player-two-mark').disabled = false;
-    const cells = document.querySelectorAll('.cell');
-    cells.forEach((element) => element.classList.remove('x', 'o'));
+    clearCells();
   };
   const startGame = () => {
+    clearDisplay();
+    game.resetGame();
+    printBoard();
     document.getElementById('player-one-mark').disabled = true;
     document.getElementById('player-two-mark').disabled = true;
     boardDiv.addEventListener('click', clickHandler);
@@ -159,5 +170,7 @@ function ScreenController() {
   // player mark event listeners
   document.querySelector('#player-one-mark').addEventListener('click', game.changePlayerMarker);
   document.querySelector('#player-two-mark').addEventListener('click', game.changePlayerMarker);
+
+  return {clearDisplay};
 }
 ScreenController();
