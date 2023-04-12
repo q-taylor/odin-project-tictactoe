@@ -85,20 +85,28 @@ function GameController() {
       || (board.getBoard()[1][1] === board.getBoard()[0][2]
       && board.getBoard()[1][1] === board.getBoard()[2][0]))
     )) {
-      resetGame();
-      console.log('winner winner chicken dinner');
+      return currentPlayer;
     } else if (board.getBoard().every((row) => row.every((element) => element !== ''))) {
-      console.log('Tie - game over');
-    }
+      return "tie";
+    } else return false;
   };
   const playRound = (activeCell) => {
+    console.log(board.getBoard());
     if (board.getBoard()[activeCell.y][activeCell.x] === '') {
       board.placeMarker(activeCell, currentPlayer.marker);
+      if (checkGameOver(activeCell)) {
+        if (checkGameOver(activeCell) == "tie") {
+        console.log("it's a tie - Game OVER");
+        } else {
+          return console.log("winner: " + checkGameOver(activeCell).name);
+        }
+      }
+      console.log("switching player at end of round: " + currentPlayer.name);
       SwitchPlayerTurn();
-      checkGameOver(activeCell);
     } else {
       console.log('space already taken, choose again');
     }
+    
   };
   
   return {
@@ -118,6 +126,8 @@ function ScreenController() {
       y: document.activeElement.dataset.yIndex,
     };
     game.playRound(activeCell);
+    
+    
   };
   // print board to website
   const printBoard = () => {
@@ -139,7 +149,7 @@ function ScreenController() {
     });
   };
   const clearCells = () => {
-    console.log("display cleared");
+    console.log("cells cleared");
     const cells = document.querySelectorAll('.cell');
     cells.forEach((element) => element.classList.remove('x', 'o'));
   };
