@@ -15,8 +15,6 @@ const Gameboard = (() => {
   // gets the entire board array
   const getBoard = () => board;
 
-  
-
   // clear board
   const clearBoard = () => {
     getBoard().forEach((element) => { element.fill(''); });
@@ -53,9 +51,9 @@ function GameController() {
   };
   // change player name whenever a new one is typed
   const changePlayerName = (e) => {
-    if (e.target.id === 'player-one') {
+    if (e.target.id === 'player-one-name') {
       playerOne.name = e.target.value;
-    } else if (e.target.id === 'player-two') {
+    } else if (e.target.id === 'player-two-name') {
       playerTwo.name = e.target.value;
     }
   };
@@ -73,7 +71,7 @@ function GameController() {
   };
   function resetGame() {
     board.clearBoard();
-  };
+  }
   // check if three in a row or board is full
   const checkGameOver = (activeCell) => {
     const mark = board.getBoard()[activeCell.y][activeCell.x];
@@ -86,31 +84,29 @@ function GameController() {
       && board.getBoard()[1][1] === board.getBoard()[2][0]))
     )) {
       return currentPlayer;
-    } else if (board.getBoard().every((row) => row.every((element) => element !== ''))) {
-      return "tie";
-    } else return false;
+    } if (board.getBoard().every((row) => row.every((element) => element !== ''))) {
+      return 'tie';
+    } return false;
   };
   const playRound = (activeCell) => {
-    console.log(board.getBoard());
+    /* console.log(board.getBoard()); */
     if (board.getBoard()[activeCell.y][activeCell.x] === '') {
       board.placeMarker(activeCell, currentPlayer.marker);
       if (checkGameOver(activeCell)) {
-        if (checkGameOver(activeCell) == "tie") {
-        console.log("it's a tie - Game OVER");
+        if (checkGameOver(activeCell) === 'tie') {
+          console.log("it's a tie - Game OVER");
         } else {
-          return console.log("winner: " + checkGameOver(activeCell).name);
+          return checkGameOver(activeCell).name;
         }
       }
-      console.log("switching player at end of round: " + currentPlayer.name);
+      console.log(`switching player at end of round: ${currentPlayer.name}`);
       SwitchPlayerTurn();
     } else {
       console.log('space already taken, choose again');
     }
-    
   };
-  
   return {
-    playRound, changePlayerName, changePlayerMarker, resetGame, board
+    playRound, changePlayerName, changePlayerMarker, resetGame, board,
   };
 }
 
@@ -125,10 +121,9 @@ function ScreenController() {
       x: document.activeElement.dataset.xIndex,
       y: document.activeElement.dataset.yIndex,
     };
-    game.playRound(activeCell);
-    
-    
-  };
+    const winner = game.playRound(activeCell);
+    console.log(winner);
+  }
   // print board to website
   const printBoard = () => {
     game.board.getBoard().forEach((rowArr, index) => {
@@ -149,13 +144,13 @@ function ScreenController() {
     });
   };
   const clearCells = () => {
-    console.log("cells cleared");
+    console.log('cells cleared');
     const cells = document.querySelectorAll('.cell');
     cells.forEach((element) => element.classList.remove('x', 'o'));
   };
   const clearDisplay = () => {
     boardDiv.textContent = '';
-  }
+  };
   const resetBtn = () => {
     game.resetGame();
     document.querySelector('#board').removeEventListener('click', clickHandler);
@@ -175,12 +170,12 @@ function ScreenController() {
   // startGameBtn listener
   document.getElementById('start-game-btn').addEventListener('click', startGame);
   // name event listeners
-  document.getElementById('player-one-name').addEventListener('input', game.changePlayerName);
-  document.getElementById('player-two-name').addEventListener('input', game.changePlayerName);
+  document.getElementById('player-one-name').addEventListener('input', (e) => game.changePlayerName(e));
+  document.getElementById('player-two-name').addEventListener('input', (e) => game.changePlayerName(e));
   // player mark event listeners
   document.querySelector('#player-one-mark').addEventListener('click', game.changePlayerMarker);
   document.querySelector('#player-two-mark').addEventListener('click', game.changePlayerMarker);
 
-  return {clearDisplay};
+  return { clearDisplay };
 }
 ScreenController();
