@@ -122,7 +122,7 @@ function ScreenController() {
       y: document.activeElement.dataset.yIndex,
     };
     const winner = game.playRound(activeCell);
-    console.log(winner);
+    console.log(`winner is: ${winner}`);
   }
   // print board to website
   const printBoard = () => {
@@ -156,6 +156,8 @@ function ScreenController() {
     document.querySelector('#board').removeEventListener('click', clickHandler);
     document.getElementById('player-one-mark').disabled = false;
     document.getElementById('player-two-mark').disabled = false;
+    document.getElementById('player-one-name').disabled = false;
+    document.getElementById('player-two-name').disabled = false;
     clearCells();
   };
   const startGame = () => {
@@ -164,6 +166,8 @@ function ScreenController() {
     printBoard();
     document.getElementById('player-one-mark').disabled = true;
     document.getElementById('player-two-mark').disabled = true;
+    document.getElementById('player-one-name').disabled = true;
+    document.getElementById('player-two-name').disabled = true;
     boardDiv.addEventListener('click', clickHandler);
     document.getElementById('reset-btn').addEventListener('click', resetBtn);
   };
