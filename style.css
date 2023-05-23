@@ -117,3 +117,16 @@ input[type=radio]:hover {
   width: calc(var(--board-size)/3);
   height: calc(var(--board-size)/6);
 }
+
+.modal {
+  display: none;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  height: var(--board-size);
+  width: var(--board-size);
+  z-index: 2;
+  background-color: rgba(128, 128, 128, 0.473);
+  text-align: center;
+  font-size: 3rem;
+}

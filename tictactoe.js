@@ -94,12 +94,11 @@ function GameController() {
       board.placeMarker(activeCell, currentPlayer.marker);
       if (checkGameOver(activeCell)) {
         if (checkGameOver(activeCell) === 'tie') {
-          console.log("it's a tie - Game OVER");
-        } else {
-          return checkGameOver(activeCell).name;
+          return 'tie';
         }
+        return checkGameOver(activeCell).name;
       }
-      console.log(`switching player at end of round: ${currentPlayer.name}`);
+      /* console.log(`switching player at end of round: ${currentPlayer.name}`); */
       SwitchPlayerTurn();
     } else {
       console.log('space already taken, choose again');
@@ -122,8 +121,18 @@ function ScreenController() {
       y: document.activeElement.dataset.yIndex,
     };
     const winner = game.playRound(activeCell);
-    console.log(`winner is: ${winner}`);
+    if (winner !== undefined) {
+      announcementModal(winner);
+      console.log(`winner is: ${winner}`);
+    }
   }
+  const announcementModal = (winner) => {
+    const modal = document.createElement('div');
+    modal.classList.add('modal');
+    modal.style.display = 'flex';
+    modal.textContent = `Winner is ${winner}`;
+    boardDiv.appendChild(modal);
+  };
   // print board to website
   const printBoard = () => {
     game.board.getBoard().forEach((rowArr, index) => {
@@ -152,6 +161,7 @@ function ScreenController() {
     boardDiv.textContent = '';
   };
   const resetBtn = () => {
+    clearDisplay();
     game.resetGame();
     document.querySelector('#board').removeEventListener('click', clickHandler);
     document.getElementById('player-one-mark').disabled = false;
