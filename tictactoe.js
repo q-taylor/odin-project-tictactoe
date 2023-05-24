@@ -39,14 +39,14 @@ const Gameboard = (() => {
 // player factory
 const Player = (name, marker) => ({ name, marker });
 
-// game controller - flow and state of game, determine winner
+// game controller - flow and state of game, determine gameOver
 function GameController() {
   const board = Gameboard;
   // create default players
   const playerOne = Player('player one', 'x');
   const playerTwo = Player('player two', 'o');
   let currentPlayer = playerOne;
-  const SwitchPlayerTurn = () => {
+  const switchActivePlayer = () => {
     currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
   };
   // change player name whenever a new one is typed
@@ -88,7 +88,7 @@ function GameController() {
       return 'tie';
     } return false;
   };
-  const playRound = (activeCell) => {
+  const playerTurn = (activeCell) => {
     /* console.log(board.getBoard()); */
     if (board.getBoard()[activeCell.y][activeCell.x] === '') {
       board.placeMarker(activeCell, currentPlayer.marker);
@@ -96,41 +96,27 @@ function GameController() {
         if (checkGameOver(activeCell) === 'tie') {
           return 'tie';
         }
-        return checkGameOver(activeCell).name;
+        return checkGameOver(activeCell);
       }
       /* console.log(`switching player at end of round: ${currentPlayer.name}`); */
-      SwitchPlayerTurn();
+      switchActivePlayer();
     } else {
       console.log('space already taken, choose again');
     }
   };
   return {
-    playRound, changePlayerName, changePlayerMarker, resetGame, board,
+    playerTurn, changePlayerName, changePlayerMarker, resetGame, board,
   };
 }
 
 function ScreenController() {
   const game = GameController();
   const boardDiv = document.querySelector('#board');
-  // button event listener
-  function clickHandler(e) {
-    // test if click is not on a cell to avoid errors
-    if (!e.target.dataset.xIndex) return;
-    const activeCell = {
-      x: document.activeElement.dataset.xIndex,
-      y: document.activeElement.dataset.yIndex,
-    };
-    const winner = game.playRound(activeCell);
-    if (winner !== undefined) {
-      announcementModal(winner);
-      console.log(`winner is: ${winner}`);
-    }
-  }
-  const announcementModal = (winner) => {
+  const announcementModal = (gameOver) => {
     const modal = document.createElement('div');
     modal.classList.add('modal');
     modal.style.display = 'flex';
-    modal.textContent = `Winner is ${winner}`;
+    modal.textContent = gameOver;
     boardDiv.appendChild(modal);
   };
   // print board to website
@@ -152,6 +138,24 @@ function ScreenController() {
       });
     });
   };
+  function clickHandler(e) {
+    // test if click is not on a cell to avoid errors
+    if (!e.target.dataset.xIndex) return;
+    const activeCell = {
+      x: document.activeElement.dataset.xIndex,
+      y: document.activeElement.dataset.yIndex,
+    };
+    // check gameOver on click
+    const gameOver = game.playerTurn(activeCell);
+    if (gameOver !== undefined) {
+      if (gameOver === 'tie') {
+        announcementModal('Tie Game');
+      } else {
+        const winner = gameOver.name;
+        announcementModal(`${winner} Wins!`);
+      }
+    }
+  }
   const clearCells = () => {
     console.log('cells cleared');
     const cells = document.querySelectorAll('.cell');
